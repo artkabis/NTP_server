@@ -21,8 +21,8 @@ NTP-Sync est une application web permettant de :
 
 1. Clonez le repository :
 ```bash
-git clone [votre-repo-url]
-cd ntp-sync
+git clone [https://github.com/artkabis/NTP_server.git](https://github.com/artkabis/NTP_server.git)
+cd NTP-server
 ```
 
 2. Installez les dépendances :
