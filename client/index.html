@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NTP Client</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .metrics { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Synchronisation NTP</h1>
+    <button onclick="checkTime()">Vérifier la synchronisation</button>
+    <div id="results"></div>
+
+    <script>
+        async function checkTime() {
+            const resultsDiv = document.getElementById('results');
+            const clientTime = Date.now();
+
+            try {
+                const response = await fetch(`http://localhost:3000/time?clientTime=${clientTime}`);
+                const data = await response.json();
+
+                // Calcul du temps d'arrivée client
+                const clientReceiveTime = Date.now();
+                const totalRoundTrip = clientReceiveTime - clientTime;
+
+                const metricsHtml = `
+                    <div class="metrics">
+                        <h3>Métriques de synchronisation</h3>
+                        <p>Temps NTP: ${new Date(data.ntpTime).toISOString()}</p>
+                        <p>Temps Client: ${new Date(clientTime).toISOString()}</p>
+                        <p>Différence Client-NTP: ${data.metrics.clientOffset}ms</p>
+                        <p>Latence totale: ${totalRoundTrip}ms</p>
+                        <p>Offset serveur-NTP: ${data.metrics.offset}ms</p>
+                        <h4>Détails techniques:</h4>
+                        <ul>
+                            <li>Temps aller-retour: ${data.metrics.roundTripDelay}ms</li>
+                            <li>Temps d'envoi client: ${new Date(clientTime).toISOString()}</li>
+                            <li>Temps de réception serveur: ${new Date(data.serverReceiveTime).toISOString()}</li>
+                            <li>Temps de réception client: ${new Date(clientReceiveTime).toISOString()}</li>
+                        </ul>
+                    </div>
+                `;
+
+                resultsDiv.innerHTML = metricsHtml;
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">Erreur: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

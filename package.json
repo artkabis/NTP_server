@@ -1,0 +1,9 @@
+{
+    "name": "ntp-sync",
+    "version": "1.0.0",
+    "dependencies": {
+      "express": "^4.17.1",
+      "ntp-client": "^0.5.3",
+      "cors": "^2.8.5"
+    }
+  }
